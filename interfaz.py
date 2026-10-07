@@ -2,7 +2,7 @@ import tkinter as tk
 import numpy as np
 
 from barcos import d_barcos, com_colocacion, col_barco, com_barco, com_hundido
-from ai import ia_colocar_barcos, ia_dis_barcos
+from ia import ia_colocar_barcos, ia_dis_barcos
 
 
 def limpiar_ventana(ventana):
