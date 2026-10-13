@@ -4,7 +4,7 @@ from barcos import d_barcos, com_colocacion, col_barco, com_barco, com_hundido
 
 
 def ia_colocar_barcos(tablero, d_boat_able, d_boat_pos, t_matriz):
-
+    '''Función que permite colocar los barcos a la IA'''
     while 1 in d_boat_able.values():
 
         boats = [
@@ -42,7 +42,7 @@ def ia_colocar_barcos(tablero, d_boat_able, d_boat_pos, t_matriz):
 
 
 def ia_dis_barcos(tablero, d_boat_pos, t_matriz):
-
+    '''Función que permite disparar a la IA'''
     fil = np.random.randint(0, t_matriz)
     col = np.random.randint(0, t_matriz)
 

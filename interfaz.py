@@ -6,16 +6,19 @@ from ia import ia_colocar_barcos, ia_dis_barcos
 
 
 def limpiar_ventana(ventana):
+    '''
+    Función que nos limpia la pantalla visible para cuando hacemos cambios de jugador o de escena
+    '''
     for widget in ventana.winfo_children():
         widget.destroy()
 
 
-def iniciar_interfaz():
-    ventana = tk.Tk()
-
-    ventana.title("Hundir la Flota")
-    ventana.geometry("1200x800")
-    ventana.resizable(False, False)
+def mostrar_menu(ventana):
+    '''
+    Función que enseña el menu de juego, cada vez que empieza la partida.
+    Usa la libreria TKinter para crear labels y botones que usaremos en el juego.
+    '''
+    limpiar_ventana(ventana)
 
     titulo = tk.Label(
         ventana,
@@ -34,21 +37,38 @@ def iniciar_interfaz():
     boton_1 = tk.Button(
         ventana,
         text="1 Jugador",
-        command=lambda: seleccionar_jugadores(ventana, 1)
+        command=lambda: mos_seleccion_dificultad(ventana, 1)
     )
     boton_1.pack(pady=10)
 
     boton_2 = tk.Button(
         ventana,
         text="2 Jugadores",
-        command=lambda: seleccionar_jugadores(ventana, 2)
+        command=lambda: mos_seleccion_dificultad(ventana, 2)
     )
     boton_2.pack(pady=10)
+
+
+def iniciar_interfaz():
+    '''
+    Función que crea la ventana de juego e invoca mostrar_menu() para poblarla.
+    Usa la libreria TKinter para crear una interfaz grafica.
+    '''
+    ventana = tk.Tk()
+
+    ventana.title("Hundir la Flota")
+    ventana.geometry("1200x800")
+    ventana.resizable(False, False)
+
+    mostrar_menu(ventana)
 
     ventana.mainloop()
 
 
-def seleccionar_jugadores(ventana, numero):
+def mos_seleccion_dificultad(ventana, numero):
+    '''
+    Función que devuelve el tamaño de la matriz que usaremos en base a la dificultad seleccionada
+    '''
     limpiar_ventana(ventana)
 
     texto_dificultad = tk.Label(
@@ -61,26 +81,31 @@ def seleccionar_jugadores(ventana, numero):
     facil = tk.Button(
         ventana,
         text="Fácil - 8x8",
-        command=lambda: seleccionar_dificultad(ventana, numero, 8, 1)
+        command=lambda: mos_seleccion_jugadores(ventana, numero, 8, 1)
     )
     facil.pack(pady=10)
 
     normal = tk.Button(
         ventana,
         text="Normal - 10x10",
-        command=lambda: seleccionar_dificultad(ventana, numero, 10, 1)
+        command=lambda: mos_seleccion_jugadores(ventana, numero, 10, 1)
     )
     normal.pack(pady=10)
 
     dificil = tk.Button(
         ventana,
         text="Difícil - 12x12",
-        command=lambda: seleccionar_dificultad(ventana, numero, 12, 1)
+        command=lambda: mos_seleccion_jugadores(ventana, numero, 12, 1)
     )
     dificil.pack(pady=10)
 
 
-def seleccionar_dificultad(ventana, numero_jugadores, tamaño, jugador):
+def mos_seleccion_jugadores(ventana, numero_jugadores, tamaño, jugador):
+    '''
+    Función que marca el numero de jugadores:
+    - Si son 2, se juega PvP
+    - Si es 1, se juega PvE
+    '''
     jugadores = {
         1: {},
         2: {}
@@ -96,8 +121,11 @@ def seleccionar_dificultad(ventana, numero_jugadores, tamaño, jugador):
 
 
 def preparar_jugador(ventana, numero_jugadores, tamaño, jugador, jugadores):
+    '''
+    Función que utiliza todos los datos dados por la selección de partida para comenzar la partida en PvP o PvE
+    '''
     botones = {}
-    botones_barcos = {}
+    botones_sel_barco = {}
     botones_direccion = {}
 
     barco_seleccionado = [None]
@@ -116,7 +144,7 @@ def preparar_jugador(ventana, numero_jugadores, tamaño, jugador, jugadores):
         "Portaaviones": 1
     }
 
-    barcos_posicion = {
+    posiciones_barcos = {
         "Destructor": [],
         "Submarino": [],
         "Crucero": [],
@@ -125,18 +153,18 @@ def preparar_jugador(ventana, numero_jugadores, tamaño, jugador, jugadores):
     }
 
     jugadores[jugador]["tablero"] = tablero
-    jugadores[jugador]["barcos_posicion"] = barcos_posicion
+    jugadores[jugador]["posiciones_barcos"] = posiciones_barcos
 
     mostrar_colocacion(
         ventana,
         tablero,
         barcos_disponibles,
-        barcos_posicion,
+        posiciones_barcos,
         tamaño,
         barco_seleccionado,
         direccion_seleccionada,
         botones,
-        botones_barcos,
+        botones_sel_barco,
         botones_direccion,
         numero_jugadores,
         jugador,
@@ -148,18 +176,23 @@ def mostrar_colocacion(
     ventana,
     tablero,
     barcos_disponibles,
-    barcos_posicion,
+    posiciones_barcos,
     tamaño,
     barco_seleccionado,
     direccion_seleccionada,
     botones,
-    botones_barcos,
+    botones_sel_barco,
     botones_direccion,
     numero_jugadores,
     jugador,
     jugadores
 ):
+    """Construye la interfaz de colocación de barcos del jugador actual.
 
+    Limpia la ventana, muestra los controles para seleccionar barcos y
+    direcciones, dibuja el tablero y añade el botón para confirmar
+    la colocación.
+    """
     limpiar_ventana(ventana)
 
     titulo = tk.Label(
@@ -193,11 +226,11 @@ def mostrar_colocacion(
                 b,
                 barco_seleccionado,
                 barcos_disponibles,
-                botones_barcos
+                botones_sel_barco
             )
         )
 
-        botones_barcos[barco] = boton
+        botones_sel_barco[barco] = boton
 
         boton.grid(
             row=1,
@@ -267,12 +300,12 @@ def mostrar_colocacion(
         frame_tablero,
         tablero,
         barcos_disponibles,
-        barcos_posicion,
+        posiciones_barcos,
         tamaño,
         barco_seleccionado,
         direccion_seleccionada,
         botones,
-        botones_barcos,
+        botones_sel_barco,
         numero_jugadores,
         jugador,
         jugadores
@@ -294,17 +327,13 @@ def mostrar_colocacion(
     boton_confirmar.pack(pady=15)
 
 
-def seleccionar_barco(
-    barco,
-    barco_seleccionado,
-    barcos_disponibles,
-    botones_barcos
-):
+def seleccionar_barco(barco, barco_seleccionado, botones_sel_barco):
+    '''Función que usa el boton de seleccionar el barco para indicar cual se va a colocar en el tablero'''
 
-    for boton in botones_barcos.values():
+    for boton in botones_sel_barco.values():
         boton.config(relief="raised")
 
-    botones_barcos[barco].config(
+    botones_sel_barco[barco].config(
         relief="sunken"
     )
 
@@ -313,11 +342,8 @@ def seleccionar_barco(
     print("Barco seleccionado:", barco)
 
 
-def seleccionar_direccion(
-    direccion,
-    direccion_seleccionada,
-    botones_direccion
-):
+def seleccionar_direccion(direccion, direccion_seleccionada, botones_direccion):
+    '''Función que usa el boton de seleccionar la dirrección para indicar cual se va a colocar en el tablero'''
 
     for boton in botones_direccion.values():
         boton.config(relief="raised")
@@ -336,17 +362,22 @@ def mostrar_tablero_colocacion(
     frame_tablero,
     tablero,
     barcos_disponibles,
-    barcos_posicion,
+    posiciones_barcos,
     tamaño,
     barco_seleccionado,
     direccion_seleccionada,
     botones,
-    botones_barcos,
+    botones_sel_barco,
     numero_jugadores,
     jugador,
     jugadores
 ):
+    """Dibuja las coordenadas y las casillas del tablero de colocación.
 
+    Muestra las letras de las columnas y los números de las filas.
+    Crea un botón interactivo para cada casilla mediante
+    crear_boton_colocacion().
+    """
     for columna in range(tamaño):
 
         letra = chr(65 + columna)
@@ -386,12 +417,12 @@ def mostrar_tablero_colocacion(
                 fila,
                 columna,
                 barcos_disponibles,
-                barcos_posicion,
+                posiciones_barcos,
                 tamaño,
                 barco_seleccionado,
                 direccion_seleccionada,
                 botones,
-                botones_barcos,
+                botones_sel_barco,
                 numero_jugadores,
                 jugador,
                 jugadores
@@ -405,17 +436,21 @@ def crear_boton_colocacion(
     fila,
     columna,
     barcos_disponibles,
-    barcos_posicion,
+    posiciones_barcos,
     tamaño,
     barco_seleccionado,
     direccion_seleccionada,
     botones,
-    botones_barcos,
+    botones_sel_barco,
     numero_jugadores,
     jugador,
     jugadores
 ):
+    """Crea y configura el botón correspondiente a una casilla del tablero.
 
+    Guarda el botón en el diccionario de botones, establece la acción
+    que se ejecutará al pulsarlo y lo coloca en la cuadrícula visual.
+    """
     boton = tk.Button(
         frame_tablero,
         text="≈",
@@ -435,12 +470,12 @@ def crear_boton_colocacion(
             columna,
             boton,
             barcos_disponibles,
-            barcos_posicion,
+            posiciones_barcos,
             tamaño,
             barco_seleccionado,
             direccion_seleccionada,
             botones,
-            botones_barcos,
+            botones_sel_barco,
             numero_jugadores,
             jugador,
             jugadores
@@ -462,16 +497,17 @@ def colocar_barco_gui(
     columna,
     boton,
     barcos_disponibles,
-    barcos_posicion,
+    posiciones_barcos,
     tamaño,
     barco_seleccionado,
     direccion_seleccionada,
     botones,
-    botones_barcos,
+    botones_sel_barco,
     numero_jugadores,
     jugador,
     jugadores
 ):
+    '''Gestiona la colocación o recolocación de un barco cuando se pulsa una casilla.'''
 
     if barco_seleccionado[0] is None:
         print("Selecciona un barco.")
@@ -485,7 +521,7 @@ def colocar_barco_gui(
 
     longitud = d_barcos[barco]
 
-    posiciones_antiguas = barcos_posicion[barco]
+    posiciones_antiguas = posiciones_barcos[barco]
 
     if posiciones_antiguas:
 
@@ -534,9 +570,9 @@ def colocar_barco_gui(
 
     barcos_disponibles[barco] = 0
 
-    barcos_posicion[barco] = posiciones
+    posiciones_barcos[barco] = posiciones
 
-    botones_barcos[barco].config(
+    botones_sel_barco[barco].config(
         relief="raised",
         bg="gray",
         fg="white"
@@ -563,7 +599,7 @@ def confirmar_colocacion(
     jugadores,
     tamaño
 ):
-
+    '''Comprueba si la colocación de todos los barcos está completa y avanza a la siguiente fase de la partida.'''
     if any(
         cantidad > 0
         for cantidad in barcos_disponibles.values()
@@ -582,6 +618,15 @@ def confirmar_colocacion(
             jugadores
         )
 
+    elif numero_jugadores == 2 and jugador == 2:
+
+        iniciar_combate(
+            ventana,
+            jugadores,
+            tamaño,
+            numero_jugadores
+            )
+
     elif numero_jugadores == 1:
 
         tablero_ia = np.zeros(
@@ -597,7 +642,7 @@ def confirmar_colocacion(
             "Portaaviones": 1
         }
 
-        barcos_posicion_ia = {
+        posiciones_barcos_ia = {
             "Destructor": [],
             "Submarino": [],
             "Crucero": [],
@@ -608,13 +653,13 @@ def confirmar_colocacion(
         ia_colocar_barcos(
             tablero_ia,
             barcos_disponibles_ia,
-            barcos_posicion_ia,
+            posiciones_barcos_ia,
             tamaño
         )
 
         jugadores[2]["tablero"] = tablero_ia
 
-        jugadores[2]["barcos_posicion"] = barcos_posicion_ia
+        jugadores[2]["posiciones_barcos"] = posiciones_barcos_ia
 
         print("Tablero de la IA:")
         print(tablero_ia)
@@ -633,6 +678,7 @@ def iniciar_combate(
     tamaño,
     numero_jugadores
 ):
+    '''Inicia el combate despues de colocar los barcos'''
 
     mostrar_turno(
         ventana,
@@ -650,7 +696,7 @@ def cambiar_turno(
     jugador_actual,
     numero_jugadores
 ):
-
+    '''Cambia el jugador activo y gestiona las acciones correspondientes al siguiente turno'''
     siguiente_jugador = 2 if jugador_actual == 1 else 1
 
     # PARTIDA CONTRA IA
@@ -658,7 +704,7 @@ def cambiar_turno(
 
         impacto = ia_dis_barcos(
             jugadores[1]["tablero"],
-            jugadores[1]["barcos_posicion"],
+            jugadores[1]["posiciones_barcos"],
             tamaño
         )
 
@@ -667,7 +713,7 @@ def cambiar_turno(
         # Comprobar si la IA ha ganado
         if comprobar_victoria(
             jugadores[1]["tablero"],
-            jugadores[1]["barcos_posicion"]
+            jugadores[1]["posiciones_barcos"]
         ):
 
             print("¡La IA ha ganado!")
@@ -745,7 +791,9 @@ def mostrar_turno(
     jugador_actual,
     numero_jugadores
 ):
-
+    '''Construye la interfaz de combate del jugador activo, usando mostrar_tablero_combate():
+    - Enseña su tablero, con sus posiciones y los disparos del rival y sus consecuencias.
+    - Enseña el tablero enemigo, con los disparos previos marcados, y enseñando sus consecuencias, pero no los barcos enemigos no encontrados.'''
     limpiar_ventana(ventana)
 
     titulo = tk.Label(
@@ -802,7 +850,7 @@ def mostrar_turno(
         jugadores[jugador_actual]["tablero"],
         tamaño,
         False,
-        jugadores[jugador_actual]["barcos_posicion"],
+        jugadores[jugador_actual]["posiciones_barcos"],
         jugador_actual,
         ventana,
         jugadores,
@@ -814,7 +862,7 @@ def mostrar_turno(
         jugadores[enemigo]["tablero"],
         tamaño,
         True,
-        jugadores[enemigo]["barcos_posicion"],
+        jugadores[enemigo]["posiciones_barcos"],
         jugador_actual,
         ventana,
         jugadores,
@@ -827,13 +875,13 @@ def mostrar_tablero_combate(
     tablero,
     tamaño,
     enemigo,
-    barcos_posicion,
+    posiciones_barcos,
     jugador_actual,
     ventana,
     jugadores,
     numero_jugadores
 ):
-
+    '''Dibuja el tablero durante el combate y muestra la información permitida según sea propio o enemigo.'''
     botones = {}
 
     for columna in range(tamaño):
@@ -913,7 +961,7 @@ def mostrar_tablero_combate(
                             c,
                             tablero,
                             b,
-                            barcos_posicion,
+                            posiciones_barcos,
                             botones,
                             jugador_actual,
                             ventana,
@@ -970,7 +1018,7 @@ def disparar_gui(
     columna,
     tablero,
     boton,
-    barcos_posicion,
+    posiciones_barcos,
     botones,
     jugador_actual,
     ventana,
@@ -978,7 +1026,7 @@ def disparar_gui(
     tamaño,
     numero_jugadores
 ):
-
+    '''Gestiona el disparo y sus consecuencias'''
     print("Disparo en:", fila, columna)
 
     if tablero[fila][columna] == 1:
@@ -997,7 +1045,7 @@ def disparar_gui(
         barco = com_barco(
             fila,
             columna,
-            barcos_posicion
+            posiciones_barcos
         )
 
         print("Has alcanzado:", barco)
@@ -1005,12 +1053,12 @@ def disparar_gui(
         if com_hundido(
             tablero,
             barco,
-            barcos_posicion
+            posiciones_barcos
         ):
 
             print("Has hundido:", barco)
 
-            for fil, col in barcos_posicion[barco]:
+            for fil, col in posiciones_barcos[barco]:
 
                 tablero[fil][col] = 4
 
@@ -1023,7 +1071,7 @@ def disparar_gui(
 
             if comprobar_victoria(
                 tablero,
-                barcos_posicion
+                posiciones_barcos
             ):
 
                 print(
@@ -1062,12 +1110,9 @@ def disparar_gui(
         )
 
 
-def comprobar_victoria(
-    tablero,
-    barcos_posicion
-):
-
-    for posiciones in barcos_posicion.values():
+def comprobar_victoria(tablero, posiciones_barcos):
+    '''Compueba si al hundir un barco, el jugador gana o no'''
+    for posiciones in posiciones_barcos.values():
 
         for fila, columna in posiciones:
 
@@ -1077,11 +1122,9 @@ def comprobar_victoria(
     return True
 
 
-def mostrar_victoria(
-    ventana,
-    jugador
-):
-
+def mostrar_victoria(ventana,jugador):
+    '''Si el jugador Gana, enseña la ventana de victoria:
+    - Permite al jugador elegir si quiere volver a jugar y cómo.'''
     limpiar_ventana(ventana)
 
     if jugador == 2:
@@ -1109,3 +1152,13 @@ def mostrar_victoria(
     )
 
     texto.pack(pady=20)
+
+    boton_rejugar = tk.Button(
+        ventana,
+        text="Volver a jugar",
+        font=("Arial", 16),
+        command=lambda: mostrar_menu(ventana)
+    )
+    boton_rejugar.pack(pady=20)
+
+

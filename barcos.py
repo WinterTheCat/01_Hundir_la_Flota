@@ -7,6 +7,8 @@ d_barcos = {
 }
 
 def sel_barco(boat_able):
+    '''Función original que nos permitia colocar los barcos usando la consola:
+    - Usa numeros y cadenas de texto para ser elegido'''
     while True:
         try:
             boat = input("¿Qué barco quieres colocar? ")
@@ -28,6 +30,7 @@ def sel_barco(boat_able):
             print("Barco no disponible.")
 
 def sel_direccion():
+    '''Función original para seleccionar mediante consola la dirección del barco'''
     while True:
         direccion = input("¿Dirección? 1- Horizontal, 2- Vertical: ")
 
@@ -41,6 +44,7 @@ def sel_direccion():
             print("Dirección no válida.")
 
 def com_colocacion(t_tablero, fil, col, long, dircc, t_matriz):
+    '''Función que comprueba si el barco cabe en las coordenadas elegidas y lo coloca de izquiera a derecha o arriba abajo según el espacio disponible.'''
     if dircc == "H":
         if col + long - 1 < t_matriz:
             for i in range(long):
@@ -72,7 +76,7 @@ def com_colocacion(t_tablero, fil, col, long, dircc, t_matriz):
     return False
 
 def col_barco(fil, col, long, pos, tablero):
-
+    '''Si todo esta bien, coloca el barco en su sitio'''
     posiciones = []
     
     if pos == "D":
@@ -98,6 +102,7 @@ def col_barco(fil, col, long, pos, tablero):
     return posiciones
 
 def com_barco(fil, col, d_boat_pos):
+    '''Comprueba si hay un barco en esa posición'''
 
     for boat, pos in d_boat_pos.items():
 
@@ -107,7 +112,7 @@ def com_barco(fil, col, d_boat_pos):
     return False
 
 def com_hundido(tablero, barco, d_boat_pos):
-
+    '''Comprueba si el barco se ha hundido'''
     for fil, col in d_boat_pos[barco]:
         if tablero[fil][col] not in [3, 4]:
             return False
