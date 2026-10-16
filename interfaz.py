@@ -225,7 +225,6 @@ def mostrar_colocacion(
             command=lambda b=barco: seleccionar_barco(
                 b,
                 barco_seleccionado,
-                barcos_disponibles,
                 botones_sel_barco
             )
         )
