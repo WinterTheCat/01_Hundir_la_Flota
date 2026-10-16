@@ -1,0 +1,110 @@
+# 🚢 Hundir la Flota
+
+Implementación del clásico juego **Hundir la Flota** desarrollada en Python, con una interfaz gráfica creada mediante Tkinter y matrices de NumPy para representar los tableros de juego.
+
+El proyecto permite configurar una partida, seleccionar la dificultad, colocar los barcos y jugar contra otro jugador o contra la inteligencia artificial.
+
+## 🎮 Características
+
+- **Interfaz gráfica:** menús y tableros interactivos desarrollados con Tkinter.
+- **Modos de juego:** partidas para uno o dos jugadores.
+- **Dificultad configurable:** tres niveles que determinan el tamaño del tablero.
+- **Colocación de barcos:** selección de barcos y dirección antes de colocarlos en el tablero.
+- **Inteligencia artificial:** colocación automática de barcos y selección de disparos.
+- **Gestión de partidas:** seguimiento de los disparos, el estado de los barcos y la condición de victoria.
+- **Estructura modular:** separación de la interfaz, la lógica de los barcos y las funciones de la IA.
+
+## 🛠️ Tecnologías
+
+- **Python 3**
+- **Tkinter:** creación de la interfaz gráfica.
+- **NumPy:** representación y gestión de los tableros mediante matrices.
+
+## 📋 Requisitos
+
+Necesitas tener instalado Python 3 y NumPy.
+
+Comprueba tu versión de Python:
+
+```bash
+python --version
+```
+
+Instala NumPy si todavía no lo tienes:
+
+```bash
+python -m pip install numpy
+```
+
+Tkinter suele venir incluido en las instalaciones de Python para Windows. En otros sistemas operativos puede ser necesario instalarlo por separado.
+
+## 🚀 Instalación y ejecución
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   ```
+
+2. Entra en la carpeta del proyecto:
+
+   ```bash
+   cd <CARPETA_DEL_PROYECTO>
+   ```
+
+3. Instala las dependencias indicadas en el apartado anterior.
+
+4. Ejecuta el archivo principal:
+
+   ```bash
+   python main.py
+   ```
+
+## 🕹️ Cómo jugar
+
+1. Inicia el juego desde el menú principal.
+2. Selecciona el modo de uno o dos jugadores.
+3. Escoge la dificultad:
+
+   | Dificultad | Tamaño del tablero |
+   |---|---:|
+   | Fácil | 8 × 8 |
+   | Normal | 10 × 10 |
+   | Difícil | 12 × 12 |
+
+4. Selecciona los barcos y la dirección en la que quieres colocarlos.
+5. Completa la colocación de la flota y confirma para comenzar la partida.
+6. Realiza disparos en el tablero rival e intenta hundir toda su flota antes de que lo haga tu oponente.
+
+## 📁 Estructura del proyecto
+
+La lógica está organizada en módulos para separar las distintas responsabilidades:
+
+| Archivo | Responsabilidad |
+|---|---|
+| `main.py` | Punto de entrada de la aplicación. |
+| `interfaz.py` | Ventanas, menús, tableros interactivos y flujo de la partida. |
+| `barcos.py` | Datos de los barcos y funciones relacionadas con su colocación y estado. |
+| `ia.py` | Lógica de la inteligencia artificial para colocar barcos y realizar disparos. |
+| `tablero.py` | Módulo auxiliar para el tablero, si forma parte de la versión actual del proyecto. |
+
+## 🧠 Objetivos del proyecto
+
+Este proyecto permite practicar conceptos de programación aplicados a un juego funcional:
+
+- Programación modular y separación de responsabilidades.
+- Uso de arrays y matrices con NumPy.
+- Desarrollo de interfaces gráficas con Tkinter.
+- Gestión de eventos e interacción con botones.
+- Validación de posiciones y direcciones.
+- Implementación de una inteligencia artificial básica.
+- Gestión del estado de una partida y detección de condiciones de victoria.
+
+## 📌 Mejoras futuras
+
+- Mejorar la inteligencia artificial para recordar los aciertos realizados y que tumbe barcos de forma eficiente.
+- Mejorar interfaz.
+- Crear clases para reducir la complejidad de parámetros en las funciones.
+
+---
+
